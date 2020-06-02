@@ -11,17 +11,21 @@ N = 256
 tr = Trajectory(reshape(traj[:,:,1:2],:,2)' ./300, 96, 512, circular=false)
 dat = Array{Array{Complex{Float64},2},3}(undef,1,1,1)
 dat[1,1,1] = reshape(data,12,:)'
-acq = AcquisitionData(tr, dat, encodingSize=[N,N,1])
+acqData = AcquisitionData(tr, dat, encodingSize=[N,N,1])
 
 params = Dict{Symbol, Any}()
 params[:reco] = "direct"
 params[:reconSize] = (N,N) 
-Ireco = reconstruction(acq, params)
+Ireco = reconstruction(acqData, params)
 
 sensitivity = estimateCoilSensitivities(Ireco)
 
 figure(1)
 imshow(abs.(Ireco[:,:,1,1,7]))
+
+
+redFac = 4.0
+acqDataSub = sample_kspace(acqData, redFac, "regular");
 
 
 # reco parameters
@@ -34,7 +38,7 @@ params[:iterations] = 1
 params[:solver] = "cgnr"
 params[:senseMaps] = reshape(sensitivity.data, N, N, 1, 12)
 
-IrecoSENSE = reconstruction(acq, params)
+IrecoSENSE = reconstruction(acqDataSub, params)
 
 
 figure(2)
