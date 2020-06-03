@@ -20,29 +20,23 @@ params[:reconSize] = (N,N)
 params[:regularization] = "L2"
 params[:solver] = "cgnr"
 params[:λ] = 0.0
-params[:iterations] = 3
+params[:iterations] = 1
 Ireco = reconstruction(acqData, params)
 
-figure(1)
+figure("single-channel reco")
 imshow(abs.(Ireco[:,:,1,1,1]),cmap="gray")
 
 # generate coil sensitivity maps
-numCoils = size(Ireco,5)
-tr = CartesianTrajectory(N,N)
-ft = N*FFTOp(ComplexF64,(N,N))
-kdata = zeros(ComplexF64,N*N,numCoils)
-for c=1:numCoils
-  kdata[:,c] .= ft*vec(Ireco[:,:,1,1,c])
-end
-acqDataCart = AcquisitionData(tr,[kdata for i=1:1,j=1:1,k=1:1], encodingSize=[N,N,1])
-sensitivity = espirit(acqDataCart,(6,6),50,eigThresh_1=0.02, eigThresh_2=0.98)
+acqDataCart = regrid2d(acqData, (N,N); cgnr_iter=3)
+sensitivity = espirit(acqDataCart,(6,6),30,eigThresh_1=0.02, eigThresh_2=0.98)
 
+# generate undersampled data
 redFac = 4.0
 # we directly generate an undersampled trajectory
 # this saves unnecessary computations during reconstruction
 acqDataSub = convertUndersampledData(sample_kspace(acqData, redFac, "regular"))
 
-# reco parameters
+# CG-SENSE reconstruction
 params = Dict{Symbol, Any}()
 params[:reco] = "multiCoil"
 params[:reconSize] = (N,N)
