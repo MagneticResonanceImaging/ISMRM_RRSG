@@ -45,6 +45,7 @@ img_cg = Vector{Array{ComplexF64,5}}(undef,4)
 img_cg1 = Vector{Array{ComplexF64,5}}(undef,4)
 img_sc = Vector{Array{ComplexF64,5}}(undef,4)
 params[:iterations] = 20
+params[:λ] = 1.e-2
 for r in rf
   @info "r=$r"
   # undersample profiles
@@ -54,12 +55,11 @@ for r in rf
   params[:solverInfo] = SolverInfo(store_solutions=true)
   img_cg[r] = reconstruction(acqDataSub, params).data
   img_cg1[r] = reshape(params[:solverInfo].x_iter[2],N,N,1,1,1)
-  Δ[r] = [norm(vec(img_ref).-params[:solverInfo].x_iter[i])/norm(vec(img_ref)) for i=1:params[:iterations]]
+  Δ[r] = [norm(vec(img_ref).-params[:solverInfo].x_iter[i])/norm(vec(img_ref)) for i=1:params[:iterations]+1]
   # single-channel reconstruction
   params[:reco] = "direct"
   img_sc[r] = reconstruction(acqDataSub, params).data
 end
-
 
 ##############
 # plot figures
@@ -71,23 +71,24 @@ plot(log.(Δ[3]),label="r=3")
 plot(log.(Δ[4]),label="r=4")
 xlabel("iteration numbers")
 ylabel("log(Δ)")
+xticks(collect(0:4:20))
 legend()
 
-figure("brain reconstructions")
+figure("brain reconstructions",figsize=(6,6))
 subplot(4,3,1); title("Single coil")
 subplot(4,3,2); title("Initial")
 subplot(4,3,3); title("Final")
 for r in rf
   # plots
   subplot(4,3,(r-1)*3+1)
-  imshow(abs.(img_sc[r][:,:,1,1,1]),cmap="gray")
+  imshow(abs.(img_sc[r][end:-1:1,end:-1:1,1,1,1]),cmap="gray")
   ylabel("r=$r")
   xticks([]);yticks([])
   subplot(4,3,(r-1)*3+2)
-  imshow(abs.(img_cg1[r][:,:,1,1,1]),cmap="gray")
+  imshow(abs.(img_cg1[r][end:-1:1,end:-1:1,1,1,1]),cmap="gray")
   xticks([]);yticks([])
   subplot(4,3,(r-1)*3+3)
-  imshow(abs.(img_cg[r][:,:,1,1,1]),cmap="gray")
+  imshow(abs.(img_cg[r][end:-1:1,end:-1:1,1,1,1]),cmap="gray")
   xticks([]);yticks([])
 end
-tight_layout()
+subplots_adjust(wspace=0.05,hspace=0.05,left=0.0,bottom=0.0,right=1.0,top=0.95)
