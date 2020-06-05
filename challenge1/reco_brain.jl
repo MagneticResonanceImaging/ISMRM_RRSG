@@ -86,6 +86,7 @@ ylabel("log(δ)")
 xticks(collect(0:4:14))
 legend()
 subplots_adjust(wspace=0.2,hspace=0.0,left=0.07,bottom=0.13,right=0.99,top=0.95)
+savefig("Fig4.png",dpi=300)
 
 figure("brain reconstructions",figsize=(4.5,6))
 subplot(4,3,1); title("Single coil")
@@ -105,3 +106,4 @@ for r in rf
   xticks([]);yticks([])
 end
 subplots_adjust(wspace=0.05,hspace=0.05,left=0.05,bottom=0.0,right=1.0,top=0.95)
+savefig("Fig5.png",dpi=300)
