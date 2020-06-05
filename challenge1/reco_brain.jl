@@ -85,8 +85,9 @@ xlabel("iteration numbers")
 ylabel("log(δ)")
 xticks(collect(0:4:14))
 legend()
+subplots_adjust(wspace=0.2,hspace=0.0,left=0.07,bottom=0.13,right=0.99,top=0.95)
 
-figure("brain reconstructions",figsize=(6,6))
+figure("brain reconstructions",figsize=(4.5,6))
 subplot(4,3,1); title("Single coil")
 subplot(4,3,2); title("Initial")
 subplot(4,3,3); title("Final")
@@ -103,4 +104,4 @@ for r in rf
   imshow(abs.(img_cg[r][end:-1:1,end:-1:1,1,1,1]),cmap="gray")
   xticks([]);yticks([])
 end
-subplots_adjust(wspace=0.05,hspace=0.05,left=0.0,bottom=0.0,right=1.0,top=0.95)
+subplots_adjust(wspace=0.05,hspace=0.05,left=0.05,bottom=0.0,right=1.0,top=0.95)
