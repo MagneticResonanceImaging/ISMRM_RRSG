@@ -21,7 +21,7 @@ The following figures show the reconstruction results generated with *MRIReco.jl
 
 ##### Figure 6
 
-*The reconstruction results of the heart data will be added soon.*
+![Figure 6](challenge1/Fig6.png?raw=true "Figure 6")
 
 ### References
 
