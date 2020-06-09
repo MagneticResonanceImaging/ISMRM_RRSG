@@ -3,7 +3,7 @@ using PyPlot, HDF5, MRIReco, LinearAlgebra
 filename = "rawdata_heart_radial_55proj_34ch.h5"
 data = permutedims(h5read(filename, "rawdata"),[3,2,1,4])
 traj = permutedims(h5read(filename, "trajectory"),[3,2,1])
-N = 300
+N = 240
 Nc = 34
 
 #############################################
@@ -19,7 +19,7 @@ acqData = AcquisitionData(tr, dat, encodingSize=[N,N,1])
 ################################
 @info "Espirit"
 acqDataCart = regrid2d(acqData, (N,N); cgnr_iter=3)
-sensitivity = espirit(acqDataCart,(6,6), 30, eigThresh_1=0.02, eigThresh_2=0.98)
+sensitivity = espirit(acqDataCart,(6,6), 30, eigThresh_1=0.02, eigThresh_2=0.96)
 
 ##############################
 # undersampled reconstructions
