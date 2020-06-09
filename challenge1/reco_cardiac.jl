@@ -62,5 +62,5 @@ for (i,r) in enumerate(rf)
   imshow(abs.(img_cg[i][end:-1:1,end:-1:1,1,1,1]),cmap="gray")
   xticks([]);yticks([])
 end
-subplots_adjust(wspace=0.0,hspace=0.0,left=0.01,bottom=0.02,right=0.99,top=0.85)
+subplots_adjust(wspace=0.04,hspace=0.04,left=0.01,bottom=0.02,right=0.99,top=0.85)
 savefig("Fig6.png",dpi=300)
