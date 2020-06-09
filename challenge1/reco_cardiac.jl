@@ -40,7 +40,7 @@ params[:λ] = 1.e-2
 for (i,r) in enumerate(rf)
   @info "r=$r"
   # undersample profiles
-  acqDataSub = convertUndersampledData(sample_kspace(acqData, Float64.(r), "regular"))
+  acqDataSub = convertUndersampledData(sample_kspace(acqData, Float64.(r), "regular",step=1))
   # SENSE reconstruction while monitoring error
   params[:reco] = "multiCoil"
   img_cg[i] = reconstruction(acqDataSub, params).data
