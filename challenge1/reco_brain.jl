@@ -4,11 +4,12 @@ filename = "rawdata_brain_radial_96proj_12ch.h5"
 data = permutedims(h5read(filename, "rawdata"),[3,2,1,4])
 traj = permutedims(h5read(filename, "trajectory"),[3,2,1])
 N = 300
+Nc = 12
 
 #############################################
 # load data and form Acquisition data object
 ##############################################
-tr = Trajectory(reshape(traj[1:2,:,:],2,:) ./300, 96, 512, circular=false)
+tr = Trajectory(reshape(traj[1:2,:,:],2,:) ./ N, 96, 512, circular=false)
 dat = Array{Array{Complex{Float64},2},3}(undef,1,1,1)
 dat[1,1,1] = 1.e8.*reshape(data,:,12)
 acqData = AcquisitionData(tr, dat, encodingSize=[N,N,1])
@@ -18,7 +19,7 @@ acqData = AcquisitionData(tr, dat, encodingSize=[N,N,1])
 ################################
 @info "Espirit"
 acqDataCart = regrid2d(acqData, (N,N); cgnr_iter=3)
-sensitivity = espirit(acqDataCart,(6,6),30,eigThresh_1=0.02, eigThresh_2=0.98)
+sensitivity = espirit(acqDataCart, (6,6), 30, eigThresh_1=0.02, eigThresh_2=0.98)
 
 ##########################
 # reference reconstruction
@@ -31,7 +32,7 @@ params[:regularization] = "L2"
 params[:λ] = 1.e-2
 params[:iterations] = 100
 params[:solver] = "cgnr"
-params[:senseMaps] = reshape(sensitivity, N, N, 1, 12)
+params[:senseMaps] = reshape(sensitivity, N, N, 1, Nc)
 
 img_ref = reconstruction(acqData, params).data
 
