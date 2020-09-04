@@ -10,6 +10,8 @@ Goal of [challenge 1](https://blog.ismrm.org/2019/04/02/ismrm-reproducible-resea
 
 #### Results
 The following figures show the reconstruction results generated with *MRIReco.jl*.
+In the left figure, Δ denotes the NRMSE between the iterates and the reference reconstruction.
+In the right figure, δ denotes the ratio of the cost function at each iteration to the initial cost function.
 
 ##### Figure 4
 
